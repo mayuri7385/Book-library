@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Book Library</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f4f4f9;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .container {
+      display: flex;
+      gap: 20px;
+    }
+    .library, .history {
+      flex: 1;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+      margin: 5px 0;
+      padding: 8px;
+      width: 100%;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      padding: 6px;
+      border-bottom: 1px solid #ddd;
+    }
+    .borrow-btn {
+      float: right;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .borrow-btn:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 My Book Library</h1>
+  
+  <div class="container">
+    <!-- Library Section -->
+    <div class="library">
+      <h2>Library</h2>
+      <input type="text" id="search" placeholder="Search books...">
+      <select id="categoryFilter">
+        <option value="all">All Categories</option>
+        <option value="fiction">Fiction</option>
+        <option value="nonfiction">Non-Fiction</option>
+        <option value="science">Science</option>
+        <option value="history">History</option>
+      </select>
+      <ul id="bookList"></ul>
+    </div>
+    
+    <!-- Borrowing History Section -->
+    <div class="history">
+      <h2>Borrowing History</h2>
+      <ul id="historyList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const books = [
+      { title: "1984", category: "fiction" },
+      { title: "Sapiens", category: "history" },
+      { title: "A Brief History of Time", category: "science" },
+      { title: "Educated", category: "nonfiction" },
+      { title: "The Great Gatsby", category: "fiction" }
+    ];
+
+    const bookList = document.getElementById("bookList");
+    const historyList = document.getElementById("historyList");
+    const searchInput = document.getElementById("search");
+    const categoryFilter = document.getElementById("categoryFilter");
+
+    function displayBooks() {
+      bookList.innerHTML = "";
+      const searchTerm = searchInput.value.toLowerCase();
+      const category = categoryFilter.value;
+
+      books.forEach((book, index) => {
+        if ((category === "all" || book.category === category) &&
+            book.title.toLowerCase().includes(searchTerm)) {
+          const li = document.createElement("li");
+          li.textContent = book.title + " (" + book.category + ")";
+          const btn = document.createElement("button");
+          btn.textContent = "Borrow";
+          btn.className = "borrow-btn";
+          btn.onclick = () => borrowBook(book.title);
+          li.appendChild(btn);
+          bookList.appendChild(li);
+        }
+      });
+    }
+
+    function borrowBook(title) {
+      const li = document.createElement("li");
+      li.textContent = `Borrowed: ${title} on ${new Date().toLocaleString()}`;
+      historyList.appendChild(li);
+    }
+
+    searchInput.addEventListener("input", displayBooks);
+    categoryFilter.addEventListener("change", displayBooks);
+
+    // Initial display
+    displayBooks();
+  </script>
+</body>
+</html>
